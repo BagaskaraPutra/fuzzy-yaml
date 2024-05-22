@@ -1,0 +1,115 @@
+inputVariables:
+  Angle:
+    memberships:
+      NegativeHigh:
+        type: trapezoid
+        bottomLeft: -90
+        upperLeft: -45
+        upperRight: -21
+        bottomRight: -11
+      Negative:
+        type: trapezoid
+        bottomLeft: -21
+        upperLeft: -11
+        upperRight: 0
+        bottomRight: 3
+      Positive:
+        type: trapezoid
+        bottomLeft: 0
+        upperLeft: 3
+        upperRight:  7
+        bottomRight: 10
+      PositiveHigh: 
+        type: trapezoid
+        bottomLeft: 7
+        upperLeft: 10
+        upperRight: 45
+        bottomRight: 90
+  AngularVelocity:
+    memberships:
+      Negative:
+        type: trapezoid
+        bottomLeft: -7
+        upperLeft: -3
+        upperRight: -0.7
+        bottomRight: -0.5
+      Average:
+        type: trapezoid
+        bottomLeft: -0.7
+        upperLeft: -0.5
+        upperRight: 0.5
+        bottomRight: 0.7
+      Positive:
+        type: trapezoid
+        bottomLeft: 0.5
+        upperLeft: 0.7
+        upperRight: 3
+        bottomRight: 7
+
+outputVariables:
+  Kp:
+    memberships:
+      Zero:
+        type: trapezoid
+        bottomLeft: 0
+        upperLeft: 0
+        upperRight: 0
+        bottomRight: 2.086
+      Medium:
+        type: trapezoid
+        bottomLeft: 2.086
+        upperLeft: 2.743
+        upperRight: 2.743
+        bottomRight: 3.4
+      High:
+        type: trapezoid
+        bottomLeft: 2.743
+        upperLeft: 3.4
+        upperRight: 3.4
+        bottomRight: 6.049
+    defuzzifier: centroid
+  Kd:
+    memberships:
+      Zero:
+        type: trapezoid
+        bottomLeft: 0
+        upperLeft: 0
+        upperRight: 0
+        bottomRight: 0.486
+      Medium:
+        type: trapezoid
+        bottomLeft: 0.486
+        upperLeft: 0.506
+        upperRight: 0.506
+        bottomRight: 0.526
+      High:
+        type: trapezoid
+        bottomLeft: 0.506
+        upperLeft: 0.526 
+        upperRight: 0.526
+        bottomRight: 0.546
+    defuzzifier: centroid
+
+RuleBase:
+  Kp:
+    row_variable: Angle
+    row_values: [NegativeHigh, Negative, Positive, PositiveHigh]
+    column_variable: AngularVelocity
+    column_values: [Negative, Average, Positive]
+    operator: AND
+    table: 
+      - [High, High, High]
+      - [Medium, Medium, Medium]
+      - [Zero, Zero, Zero]
+      - [High, High, High]
+  Kd:
+    row_variable: Angle
+    row_values: [NegativeHigh, Negative, Positive, PositiveHigh]
+    column_variable: AngularVelocity
+    column_values: [Negative, Average, Positive]
+    operator: AND
+    table: 
+      - [High, High, High]
+      - [Medium, Medium, Medium]
+      - [Zero, Zero, Zero]
+      - [High, High, High]

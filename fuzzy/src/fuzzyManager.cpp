@@ -41,7 +41,7 @@ namespace fuzzyyaml{
         return _fuzzifiedValues;
     }
 
-    std::map<std::string, double> FuzzyManager::GetInferenceValues()
+    std::map<std::string, std::map<std::string, double>> FuzzyManager::GetInferenceValues()
     {
         return _inferenceValues;
     }
@@ -130,10 +130,10 @@ namespace fuzzyyaml{
                 // TODO: Add other output membership methods in else if
                 // _pOutputMembership->PrintMembershipData();
                 _pOutputMemberships[crispVariable].insert(std::make_pair(itLinguistic->first.as<std::string>(), _pOutputMembership));
+                _inferenceValues[crispVariable].insert(std::make_pair(itLinguistic->first.as<std::string>(), 0.0));
             }
             std::string defuzzifierType = itCrisp->second["defuzzifier"].as<std::string>();
             getDefuzzifierConfig(defuzzifierType, crispVariable);
-            _inferenceValues[crispVariable] = 0.0;
             _defuzzifiedValues[crispVariable] = 0.0;
         }
         _pOutputMembership = NULL;
@@ -180,7 +180,7 @@ namespace fuzzyyaml{
         std::string key;
         for (auto& crispVariable : _inferenceValues) {
             key = crispVariable.first;
-            crispVariable.second = _pRuleBases.at(key)->CalcInference(_fuzzifiedValues);
+            _pRuleBases.at(key)->CalcInference(_fuzzifiedValues, _inferenceValues.at(key));
         }
     }
 

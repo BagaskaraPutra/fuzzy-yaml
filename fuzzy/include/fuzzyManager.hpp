@@ -28,7 +28,7 @@ namespace fuzzyyaml{
         std::map<std::string, std::map<std::string, OutputMembership*>> GetOutputMemberships();
         bool SetCrispInput(const std::string &crispVariable, double crispInput);
         std::map<std::string, std::map<std::string, double>> GetFuzzifiedValues();
-        std::map<std::string, double> GetInferenceValues();
+        std::map<std::string, std::map<std::string, double>> GetInferenceValues();
         std::map<std::string, double> CalcCrispOutputs();
         ~FuzzyManager();
 
@@ -47,7 +47,7 @@ namespace fuzzyyaml{
         std::map<std::string, Defuzzifier*> _pDefuzzifiers;
         std::map<std::string, std::map<std::string, double>> _fuzzifiedValues;
         std::map<std::string, RuleBase*> _pRuleBases;
-        std::map<std::string, double> _inferenceValues;
+        std::map<std::string, std::map<std::string, double>> _inferenceValues;
         std::map<std::string, double> _defuzzifiedValues;
     };
 }

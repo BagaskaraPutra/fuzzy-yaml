@@ -31,22 +31,28 @@ namespace fuzzyyaml{
         }
     }
 
-    double RuleTable::CalcInference(std::map<std::string, std::map<std::string, double>>& fuzzifiedValues)
+    void RuleTable::CalcInference(std::map<std::string, std::map<std::string, double>> &fuzzifiedValues, 
+                                    std::map<std::string, double> &inferenceValues)
     {
-        _fuzzyInference = 0.0;
+        for (auto& inferenceValue : inferenceValues){
+            inferenceValue.second = 0.0;
+        }
+        // std::cout << "\n[RuleTable] outputVariable: " << _outputVariableName << std::endl;
         if (_operatorString == "AND" || _operatorString == "and"){
-            for (auto& row_el : _rowValues){
-                for(auto & col_el : _columnValues){
-                    _fuzzyInference = std::fmax(_fuzzyInference, std::fmin(
-                        fuzzifiedValues.at(_rowVariable).at(row_el),
-                        fuzzifiedValues.at(_columnVariable).at(col_el)
-                    ));
-                    // std::cout << "row_el: " << row_el << "\tcol_el: " << col_el << std::endl;
-                    // std::cout << "fuzzRow: " << fuzzifiedValues.at(_rowVariable).at(row_el);
-                    // std::cout << "\tfuzzCol: " << fuzzifiedValues.at(_columnVariable).at(col_el) << std::endl;
+            for (size_t i=0; i < _rowValues.size(); ++i){
+                for(size_t j=0; j < _columnValues.size(); ++j){
+                    inferenceValues.at(_ruleTable.at(i).at(j)) = std::fmax(
+                        inferenceValues.at(_ruleTable.at(i).at(j)) , 
+                        std::fmin(
+                            fuzzifiedValues.at(_rowVariable).at(_rowValues.at(i)),
+                            fuzzifiedValues.at(_columnVariable).at(_columnValues.at(j))
+                        ));
+                    // std::cout << "row[" << i << "]: " << _rowValues.at(i) << "\tcol[" << j << "]: " << _columnValues.at(j) << std::endl;
+                    // std::cout << "fuzzRow: " << fuzzifiedValues.at(_rowVariable).at(_rowValues.at(i));
+                    // std::cout << "\tfuzzCol: " << fuzzifiedValues.at(_columnVariable).at(_columnValues.at(j)) << std::endl;
+                    // std::cout << _ruleTable.at(i).at(j) << "\tinferenceValues: " << inferenceValues.at(_ruleTable.at(i).at(j)) << std::endl;
                 }
             }
-        }
-        return _fuzzyInference;
+        } 
     }
 }

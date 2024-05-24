@@ -50,43 +50,37 @@ outputVariables:
   Kp:
     memberships:
       Zero:
-        type: trapezoid
+        type: triangle
         bottomLeft: 0
-        upperLeft: 0
-        upperRight: 0
+        peak: 0
         bottomRight: 1.68
       Medium:
-        type: trapezoid
+        type: triangle
         bottomLeft: 1.68
-        upperLeft: 2.743
-        upperRight: 2.743
+        peak: 2.743
         bottomRight: 3.806
       High:
-        type: trapezoid
+        type: triangle
         bottomLeft: 2.743
-        upperLeft: 3.806
-        upperRight: 3.806
+        peak: 3.806
         bottomRight: 4.869
     defuzzifier: centroid
   Kd:
     memberships:
       Zero:
-        type: trapezoid
+        type: triangle
         bottomLeft: 0
-        upperLeft: 0
-        upperRight: 0
+        peak: 0
         bottomRight: 0.486
       Medium:
-        type: trapezoid
+        type: triangle
         bottomLeft: 0.486
-        upperLeft: 0.506
-        upperRight: 0.506
+        peak: 0.506
         bottomRight: 0.526
       High:
-        type: trapezoid
+        type: triangle
         bottomLeft: 0.506
-        upperLeft: 0.526 
-        upperRight: 0.526
+        peak: 0.526 
         bottomRight: 0.546
     defuzzifier: centroid
 

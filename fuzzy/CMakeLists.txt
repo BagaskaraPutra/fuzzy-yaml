@@ -11,6 +11,9 @@ set(FUZZY_SOURCE_FILES
   ${CMAKE_CURRENT_SOURCE_DIR}/src/memberships/trapezoidMembership.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/src/memberships/trapezoidInputMembership.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/src/memberships/trapezoidOutputMembership.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/memberships/triangleMembership.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/memberships/triangleInputMembership.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/memberships/triangleOutputMembership.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/src/ruleBase/ruleBase.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/src/ruleBase/ruleTable.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/src/defuzzifier/defuzzifier.cpp

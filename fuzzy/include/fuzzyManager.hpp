@@ -15,6 +15,8 @@
 // TODO: Refactor into factory design pattern to reduce changes in the fuzzyManager
 #include "trapezoidInputMembership.hpp"
 #include "trapezoidOutputMembership.hpp"
+#include "triangleInputMembership.hpp"
+#include "triangleOutputMembership.hpp"
 #include "ruleTable.hpp"
 #include "centroid.hpp"
 

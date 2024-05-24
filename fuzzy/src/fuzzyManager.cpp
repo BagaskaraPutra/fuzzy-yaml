@@ -96,7 +96,13 @@ namespace fuzzyyaml{
                                                                     itLinguistic->second["upperRight"].as<double>(),
                                                                     itLinguistic->second["bottomRight"].as<double>()
                                                                     );
-                }
+                } else if (sMembershipType == "triangle") {
+                   _pInputMembership = new TriangleInputMembership(itLinguistic->first.as<std::string>(),
+                                                                    itLinguistic->second["bottomLeft"].as<double>(),
+                                                                    itLinguistic->second["peak"].as<double>(),
+                                                                    itLinguistic->second["bottomRight"].as<double>()
+                                                                    );
+                } 
                 // TODO: Add other input membership methods in else if
                 // _pInputMembership->PrintMembershipData();
                 _pInputMemberships[crispVariable].insert(std::make_pair(itLinguistic->first.as<std::string>(), _pInputMembership)); //.push_back(_pMembership);
@@ -124,6 +130,12 @@ namespace fuzzyyaml{
                                                                     itLinguistic->second["bottomLeft"].as<double>(),
                                                                     itLinguistic->second["upperLeft"].as<double>(),
                                                                     itLinguistic->second["upperRight"].as<double>(),
+                                                                    itLinguistic->second["bottomRight"].as<double>()
+                                                                    );
+                } else if (sMembershipType == "triangle") {
+                   _pOutputMembership = new TriangleOutputMembership(itLinguistic->first.as<std::string>(),
+                                                                    itLinguistic->second["bottomLeft"].as<double>(),
+                                                                    itLinguistic->second["peak"].as<double>(),
                                                                     itLinguistic->second["bottomRight"].as<double>()
                                                                     );
                 }

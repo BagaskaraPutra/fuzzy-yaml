@@ -16,7 +16,7 @@ namespace fuzzyyaml
     public:
         Defuzzifier(const std::string &outputVariableName, std::map<std::string, OutputMembership*>& outputMemberships);
         void SetOutputMemberships(std::map<std::string, OutputMembership*>& outputMemberships);
-        virtual double Defuzzify(double fuzzyInference) = 0;
+        virtual double Defuzzify(std::map<std::string, double> fuzzyInference) = 0;
 
     protected:
         std::string _outputVariableName;

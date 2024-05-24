@@ -8,7 +8,7 @@ namespace fuzzyyaml{
     {
     public:
         Centroid(const std::string &outputVariableName, std::map<std::string, OutputMembership*>& outputMemberships);
-        double Defuzzify(double fuzzyInference) override;
+        double Defuzzify(std::map<std::string, double> fuzzyInference) override;
     
 
     };

@@ -12,7 +12,8 @@ namespace fuzzyyaml{
         RuleTable(const std::string& outputVariableName, YAML::Node& ruleBaseNode);
         bool SetRuleBase(YAML::Node& ruleBaseNode); 
         void PrintRules() override;
-        double CalcInference(std::map<std::string, std::map<std::string, double>>& fuzzifiedValues) override;
+        void CalcInference(std::map<std::string, std::map<std::string, double>>& fuzzifiedValues,
+                                    std::map<std::string, double>& inferenceValues) override;
     protected:
         std::string _rowVariable, _columnVariable;
         std::vector<std::string> _rowValues, _columnValues;

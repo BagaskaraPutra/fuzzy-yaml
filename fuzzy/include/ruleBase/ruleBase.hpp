@@ -16,11 +16,11 @@ namespace fuzzyyaml{
         void SetOperator(const std::string& operatorStr);
         virtual bool SetRuleBase(YAML::Node& ruleBaseNode) = 0;
         virtual void PrintRules() = 0; 
-        virtual double CalcInference(std::map<std::string, std::map<std::string, double>>& fuzzifiedValues) = 0;
+        virtual void CalcInference(std::map<std::string, std::map<std::string, double>>& fuzzifiedValues,
+                                    std::map<std::string, double>& inferenceValues) = 0;
     protected:
         std::string _outputVariableName;
         std::string _operatorString;
-        double _fuzzyInference;
     };
 }
 

@@ -24,14 +24,19 @@ polygon_t TrapezoidOutputMembership::GetPolygon()
 {
     _xinf1 = MathUtils::calcX(_fuzzyInference, 0.0, 1.0, _bottomLeft, _upperLeft); //(_upperLeft - _bottomLeft)*_fuzzyInference + _bottomLeft;
     _xinf2 = MathUtils::calcX(_fuzzyInference, 1.0, 0.0, _upperRight, _bottomRight);
+    bg::clear(_polygon);
     bg::append(_polygon.outer(), point_t(_bottomLeft, 0.0));
-    bg::append(_polygon.outer(), point_t(_xinf1,  _fuzzyInference));
+    bg::append(_polygon.outer(), point_t(_xinf1, _fuzzyInference));
     bg::append(_polygon.outer(), point_t(_xinf2, _fuzzyInference));
     bg::append(_polygon.outer(), point_t(_bottomRight,0.0));
     bg::append(_polygon.outer(), point_t(_bottomLeft, 0.0));
     point_t centroidXY; 
     bg::centroid(_polygon, centroidXY);
     // std::cout << "Local trapezoid name: " << _name << "\tinference: " << _fuzzyInference  << "\tarea: " << bg::area(_polygon) <<"\tcentroid: " << centroidXY.x() << std::endl;
+    // for (auto& itPoint : _polygon.outer()){
+    //     std::cout << "(" << itPoint.x() << "," << itPoint.y() << ") ";
+    // }
+    // printf("\n");
     return _polygon;
 }
 

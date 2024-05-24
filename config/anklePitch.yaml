@@ -54,19 +54,19 @@ outputVariables:
         bottomLeft: 0
         upperLeft: 0
         upperRight: 0
-        bottomRight: 2.086
+        bottomRight: 1.68
       Medium:
         type: trapezoid
-        bottomLeft: 2.086
+        bottomLeft: 1.68
         upperLeft: 2.743
         upperRight: 2.743
-        bottomRight: 3.4
+        bottomRight: 3.806
       High:
         type: trapezoid
         bottomLeft: 2.743
-        upperLeft: 3.4
-        upperRight: 3.4
-        bottomRight: 6.049
+        upperLeft: 3.806
+        upperRight: 3.806
+        bottomRight: 4.869
     defuzzifier: centroid
   Kd:
     memberships:
@@ -112,4 +112,4 @@ RuleBase:
       - [High, High, High]
       - [Medium, Medium, Medium]
       - [Zero, Zero, Zero]
-      - [High, High, High]
+      - [Medium, Medium, Medium]

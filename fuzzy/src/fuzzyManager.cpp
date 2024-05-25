@@ -154,7 +154,7 @@ namespace fuzzyyaml{
 
     bool FuzzyManager::getRuleBasesConfig(YAML::Node &masterNode)
     {
-        YAML::Node ruleBaseNode = masterNode["RuleBase"];
+        YAML::Node ruleBaseNode = masterNode["ruleBase"];
         for (YAML::const_iterator itRules=ruleBaseNode.begin(); itRules != ruleBaseNode.end(); ++itRules) {
             std::string outputVariable = itRules->first.as<std::string>();
             if (itRules->second["table"]){

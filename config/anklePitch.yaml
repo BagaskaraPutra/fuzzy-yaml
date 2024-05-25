@@ -84,7 +84,7 @@ outputVariables:
         bottomRight: 0.546
     defuzzifier: centroid
 
-RuleBase:
+ruleBase:
   Kp:
     row_variable: Angle
     row_values: [NegativeHigh, Negative, Positive, PositiveHigh]

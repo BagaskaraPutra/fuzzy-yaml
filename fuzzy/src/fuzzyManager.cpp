@@ -10,9 +10,15 @@ namespace fuzzyyaml{
             std::cerr << "Failed to load " << configPath << std::endl;;
             return;
         }
-        getInputVariablesConfig(config_);
-        getOutputVariablesConfig(config_);
-        getRuleBasesConfig(config_);
+
+        _pInputMembershipFactory = new InputMembershipFactory();
+        _pOutputMembershipFactory = new OutputMembershipFactory();
+        _pRuleBaseFactory = new RuleBaseFactory();
+        _pDefuzzifierFactory = new DefuzzifierFactory();
+        
+        getInputVariablesConstructor(config_);
+        getOutputVariablesConstructor(config_);
+        getRuleBasesConstructor(config_);
 
         std::cout<<"[FuzzyManager] Finished loading config constructor: "<<configPath<<std::endl;
     }
@@ -56,6 +62,10 @@ namespace fuzzyyaml{
 
     FuzzyManager::~FuzzyManager()
     {
+        delete _pInputMembershipFactory;
+        delete _pOutputMembershipFactory;
+        delete _pRuleBaseFactory;
+        delete _pDefuzzifierFactory;
         for (auto& crispVariable : _pInputMemberships){
             for (auto& membership : crispVariable.second){
                 // TODO: WTF? It works when I delete the explicitly casted InputMembership* pointer to TrapezoidInputMembership*
@@ -78,100 +88,59 @@ namespace fuzzyyaml{
         }
     }
 
-    bool FuzzyManager::getInputVariablesConfig(YAML::Node &masterNode)
+    bool FuzzyManager::getInputVariablesConstructor(YAML::Node &masterNode)
     {
         YAML::Node variablesNode_ = masterNode["inputVariables"];
-        InputMembership *_pInputMembership;
+        InputMembership *pInputMembership;
         YAML::Node membershipsNode_;
         for (YAML::const_iterator itCrisp=variablesNode_.begin(); itCrisp != variablesNode_.end(); ++itCrisp) {
             std::string crispVariable = itCrisp->first.as<std::string>();
             membershipsNode_ = itCrisp->second["memberships"];
             // std::cout << "[FuzzyManager] Input crisp variable: " << crispVariable << std::endl;
             for (YAML::const_iterator itLinguistic=membershipsNode_.begin(); itLinguistic != membershipsNode_.end(); ++itLinguistic) {
-                std::string sMembershipType = itLinguistic->second["type"].as<std::string>();
-                if (sMembershipType == "trapezoid") {
-                   _pInputMembership = new TrapezoidInputMembership(itLinguistic->first.as<std::string>(),
-                                                                    itLinguistic->second["bottomLeft"].as<double>(),
-                                                                    itLinguistic->second["upperLeft"].as<double>(),
-                                                                    itLinguistic->second["upperRight"].as<double>(),
-                                                                    itLinguistic->second["bottomRight"].as<double>()
-                                                                    );
-                } else if (sMembershipType == "triangle") {
-                   _pInputMembership = new TriangleInputMembership(itLinguistic->first.as<std::string>(),
-                                                                    itLinguistic->second["bottomLeft"].as<double>(),
-                                                                    itLinguistic->second["peak"].as<double>(),
-                                                                    itLinguistic->second["bottomRight"].as<double>()
-                                                                    );
-                } 
-                // TODO: Add other input membership methods in else if
-                // _pInputMembership->PrintMembershipData();
-                _pInputMemberships[crispVariable].insert(std::make_pair(itLinguistic->first.as<std::string>(), _pInputMembership)); //.push_back(_pMembership);
+                _pInputMembershipFactory->GetInputMembership(itLinguistic, pInputMembership);
+                _pInputMemberships[crispVariable].insert(std::make_pair(itLinguistic->first.as<std::string>(), pInputMembership));
                 _fuzzifiedValues[crispVariable].insert(std::make_pair(itLinguistic->first.as<std::string>(), 0.0));
             }
         }
-        _pInputMembership = NULL;
+        pInputMembership = NULL;
         return true;
     }
 
-    bool FuzzyManager::getOutputVariablesConfig(YAML::Node &masterNode)
+    bool FuzzyManager::getOutputVariablesConstructor(YAML::Node &masterNode)
     {
         YAML::Node variablesNode_ = masterNode["outputVariables"];
         YAML::Node membershipsNode_; 
-        OutputMembership *_pOutputMembership;
+        OutputMembership *pOutputMembership;
 
         for (YAML::const_iterator itCrisp=variablesNode_.begin(); itCrisp != variablesNode_.end(); ++itCrisp) {
             std::string crispVariable = itCrisp->first.as<std::string>();
             // std::cout << "[FuzzyManager] Output crisp variable: " << crispVariable << std::endl;
             membershipsNode_ = itCrisp->second["memberships"];
             for (YAML::const_iterator itLinguistic=membershipsNode_.begin(); itLinguistic != membershipsNode_.end(); ++itLinguistic) {
-                std::string sMembershipType = itLinguistic->second["type"].as<std::string>();
-                if (sMembershipType == "trapezoid") {
-                   _pOutputMembership = new TrapezoidOutputMembership(itLinguistic->first.as<std::string>(),
-                                                                    itLinguistic->second["bottomLeft"].as<double>(),
-                                                                    itLinguistic->second["upperLeft"].as<double>(),
-                                                                    itLinguistic->second["upperRight"].as<double>(),
-                                                                    itLinguistic->second["bottomRight"].as<double>()
-                                                                    );
-                } else if (sMembershipType == "triangle") {
-                   _pOutputMembership = new TriangleOutputMembership(itLinguistic->first.as<std::string>(),
-                                                                    itLinguistic->second["bottomLeft"].as<double>(),
-                                                                    itLinguistic->second["peak"].as<double>(),
-                                                                    itLinguistic->second["bottomRight"].as<double>()
-                                                                    );
-                }
-                // TODO: Add other output membership methods in else if
-                // _pOutputMembership->PrintMembershipData();
-                _pOutputMemberships[crispVariable].insert(std::make_pair(itLinguistic->first.as<std::string>(), _pOutputMembership));
+                _pOutputMembershipFactory->GetOutputMembership(itLinguistic, pOutputMembership);
+                _pOutputMemberships[crispVariable].insert(std::make_pair(itLinguistic->first.as<std::string>(), pOutputMembership));
                 _inferenceValues[crispVariable].insert(std::make_pair(itLinguistic->first.as<std::string>(), 0.0));
             }
             std::string defuzzifierType = itCrisp->second["defuzzifier"].as<std::string>();
-            getDefuzzifierConfig(defuzzifierType, crispVariable);
+            getDefuzzifiersConstructor(defuzzifierType, crispVariable);
             _defuzzifiedValues[crispVariable] = 0.0;
         }
-        _pOutputMembership = NULL;
+        pOutputMembership = NULL;
         return true;
     }
 
-    bool FuzzyManager::getRuleBasesConfig(YAML::Node &masterNode)
+    bool FuzzyManager::getRuleBasesConstructor(YAML::Node &masterNode)
     {
         YAML::Node ruleBaseNode = masterNode["ruleBase"];
-        for (YAML::const_iterator itRules=ruleBaseNode.begin(); itRules != ruleBaseNode.end(); ++itRules) {
-            std::string outputVariable = itRules->first.as<std::string>();
-            if (itRules->second["table"]){
-                _pRuleBases[outputVariable] = new RuleTable(outputVariable, ruleBaseNode);
-            }
-            // TODO: Add other rule base methods in else if
-            // _pRuleBases.at(outputVariable)->PrintRules();
-        }
-        return true;
+        return _pRuleBaseFactory->GetRuleBase(ruleBaseNode, _pRuleBases);
     }
 
-    bool FuzzyManager::getDefuzzifierConfig(const std::string& defuzzifierType, const std::string& crispVariable)
+    bool FuzzyManager::getDefuzzifiersConstructor(const std::string& defuzzifierType, const std::string& crispVariable)
     {
-        if (defuzzifierType == "centroid"){
-            _pDefuzzifiers[crispVariable] = new Centroid(crispVariable, _pOutputMemberships.at(crispVariable));
-        }
-        // TODO: Add other defuzzifier methods in else if
+        Defuzzifier* pDefuzzifier;
+        _pDefuzzifierFactory->GetDefuzzifier(defuzzifierType, crispVariable, _pOutputMemberships.at(crispVariable), pDefuzzifier);
+        _pDefuzzifiers[crispVariable] = pDefuzzifier;
         return true;
     }
 

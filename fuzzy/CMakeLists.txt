@@ -7,17 +7,27 @@ set(FUZZY_SOURCE_FILES
   ${CMAKE_CURRENT_SOURCE_DIR}/src/mathUtils.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/src/memberships/membership.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/src/memberships/inputMembership.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/memberships/inputMembershipFactory.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/src/memberships/outputMembership.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/memberships/outputMembershipFactory.cpp
+  
   ${CMAKE_CURRENT_SOURCE_DIR}/src/memberships/trapezoidMembership.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/src/memberships/trapezoidInputMembership.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/src/memberships/trapezoidOutputMembership.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/src/memberships/triangleMembership.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/src/memberships/triangleInputMembership.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/src/memberships/triangleOutputMembership.cpp
+  # TODO: Add new memberships *.cpp here
+  
   ${CMAKE_CURRENT_SOURCE_DIR}/src/ruleBase/ruleBase.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/ruleBase/ruleBaseFactory.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/src/ruleBase/ruleTable.cpp
+  # TODO: Add new rule bases *.cpp here
+
   ${CMAKE_CURRENT_SOURCE_DIR}/src/defuzzifier/defuzzifier.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/defuzzifier/defuzzifierFactory.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/src/defuzzifier/centroid.cpp
+  # TODO: Add new defuzzifiers *.cpp here
 )
 
 add_library(fuzzy_lib ${FUZZY_SOURCE_FILES})

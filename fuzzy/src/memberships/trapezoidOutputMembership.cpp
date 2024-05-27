@@ -30,8 +30,8 @@ polygon_t TrapezoidOutputMembership::GetPolygon()
     bg::append(_polygon.outer(), point_t(_xinf2, _fuzzyInference));
     bg::append(_polygon.outer(), point_t(_bottomRight,0.0));
     bg::append(_polygon.outer(), point_t(_bottomLeft, 0.0));
-    point_t centroidXY; 
-    bg::centroid(_polygon, centroidXY);
+    // point_t centroidXY; 
+    // bg::centroid(_polygon, centroidXY);
     // std::cout << "Local trapezoid name: " << _name << "\tinference: " << _fuzzyInference  << "\tarea: " << bg::area(_polygon) <<"\tcentroid: " << centroidXY.x() << std::endl;
     // for (auto& itPoint : _polygon.outer()){
     //     std::cout << "(" << itPoint.x() << "," << itPoint.y() << ") ";

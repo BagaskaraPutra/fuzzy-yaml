@@ -1,26 +1,55 @@
 #include "fuzzyManager.hpp"
 
 namespace fuzzyyaml{
-    FuzzyManager::FuzzyManager(const std::string& configPath)
+    FuzzyManager::FuzzyManager()
     {
-        YAML::Node config_;
-        try {
-            config_ = YAML::LoadFile(configPath.c_str());
-        } catch(const std::exception& e) {
-            std::cerr << "Failed to load " << configPath << std::endl;;
-            return;
-        }
-
+        _configPath = "";
         _pInputMembershipFactory = new InputMembershipFactory();
         _pOutputMembershipFactory = new OutputMembershipFactory();
         _pRuleBaseFactory = new RuleBaseFactory();
         _pDefuzzifierFactory = new DefuzzifierFactory();
-        
-        getInputVariablesConstructor(config_);
-        getOutputVariablesConstructor(config_);
-        getRuleBasesConstructor(config_);
+    }
 
-        std::cout<<"[FuzzyManager] Finished loading config constructor: "<<configPath<<std::endl;
+    FuzzyManager::FuzzyManager(const std::string& configPath)
+    {
+        YAML::Node configNode;
+        try {
+            configNode = YAML::LoadFile(configPath.c_str());
+        } catch(const std::exception& e) {
+            std::cerr << "Failed to load " << configPath << std::endl;;
+            return;
+        }
+        
+        _pInputMembershipFactory = new InputMembershipFactory();
+        _pOutputMembershipFactory = new OutputMembershipFactory();
+        _pRuleBaseFactory = new RuleBaseFactory();
+        _pDefuzzifierFactory = new DefuzzifierFactory();
+
+        LoadConfig(configPath);
+    }
+
+    void FuzzyManager::LoadConfig(const std::string &configPath)
+    {
+        YAML::Node configNode;
+        try
+        {
+            configNode = YAML::LoadFile(configPath.c_str());
+        }
+        catch(const std::exception& e)
+        {
+            std::cout << "Failed to load: " << configPath << std::endl;
+            return;
+        }
+        // This deletes & clears every key-value map everytime LoadConfig is called
+        // TODO: Maybe make it more efficient by checking keys first before deleting & constructing?  
+        if (_configPath.compare(configPath)) {
+            deleteCollections();
+        }
+        getInputVariablesConstructor(configNode);
+        getOutputVariablesConstructor(configNode);
+        getRuleBasesConstructor(configNode);
+        _configPath = configPath;
+        std::cout<<"[FuzzyManager] Finished loading config: "<<configPath<<std::endl;
     }
 
     std::map<std::string, std::map<std::string, InputMembership *>> FuzzyManager::GetInputMemberships()
@@ -66,26 +95,7 @@ namespace fuzzyyaml{
         delete _pOutputMembershipFactory;
         delete _pRuleBaseFactory;
         delete _pDefuzzifierFactory;
-        for (auto& crispVariable : _pInputMemberships){
-            for (auto& membership : crispVariable.second){
-                // TODO: WTF? It works when I delete the explicitly casted InputMembership* pointer to TrapezoidInputMembership*
-                // https://www.quora.com/How-do-you-delete-a-subclass-pointer-where-you-use-a-parent-pointer-as-formal-parameters-in-a-function
-                // delete (TrapezoidInputMembership*)membership.second;.
-                // Solution: add virtual deconstructor in the Membership base class
-                delete membership.second;
-            }
-        }
-        for (auto& crispVariable : _pOutputMemberships){
-            for (auto &membership : crispVariable.second){
-                delete membership.second;
-            }
-        }
-        for (auto& crispVariable : _pDefuzzifiers){
-            delete crispVariable.second;
-        }
-        for (auto& crispVariable : _pRuleBases){
-            delete crispVariable.second;
-        }
+        deleteCollections();
     }
 
     bool FuzzyManager::getInputVariablesConstructor(YAML::Node &masterNode)
@@ -148,7 +158,6 @@ namespace fuzzyyaml{
     {
         for (auto &imf : _pInputMemberships) {
             for (auto &linguistic : imf.second) {
-                // std::cout << linguistic.first << std::endl;
                 _fuzzifiedValues.at(imf.first).at(linguistic.first) = linguistic.second->CalcTruthValue();
                 // std::cout << "[FuzzyManager] _fuzzifiedValues crisp: " << imf.first; 
                 // std::cout<< "\tlinguistic: " << linguistic.first << "\ttruth value: " << _fuzzifiedValues.at(imf.first).at(linguistic.first) << std::endl;  
@@ -172,5 +181,32 @@ namespace fuzzyyaml{
             key = crispVariable.first;
             _defuzzifiedValues.at(key) = _pDefuzzifiers.at(key)->Defuzzify(_inferenceValues.at(key));
         }
+    }
+
+    void FuzzyManager::deleteCollections()
+    {      
+        for (auto& crispVariable : _pInputMemberships){
+            for (auto& membership : crispVariable.second){
+                delete membership.second;
+            }
+        }
+        _pInputMemberships.clear();
+        for (auto& crispVariable : _pOutputMemberships){
+            for (auto &membership : crispVariable.second){
+                delete membership.second;
+            }
+        }
+        _pOutputMemberships.clear();
+        for (auto& crispVariable : _pDefuzzifiers){
+            delete crispVariable.second;
+        }
+        _pDefuzzifiers.clear();
+        _fuzzifiedValues.clear();
+        for (auto& crispVariable : _pRuleBases){
+            delete crispVariable.second;
+        }
+        _pRuleBases.clear();
+        _inferenceValues.clear();
+        _defuzzifiedValues.clear();
     }
 }

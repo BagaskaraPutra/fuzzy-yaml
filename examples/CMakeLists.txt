@@ -16,3 +16,11 @@ target_link_libraries(multiAnklePitch PUBLIC
 target_include_directories(multiAnklePitch PUBLIC
   ${COMMON_INCLUDE_DIRECTORIES}
 )
+
+add_executable(anklePitchReload anklePitchReload.cpp)
+target_link_libraries(anklePitchReload PUBLIC
+  ${COMMON_LINK_LIBRARIES}
+)
+target_include_directories(anklePitchReload PUBLIC
+  ${COMMON_INCLUDE_DIRECTORIES}
+)

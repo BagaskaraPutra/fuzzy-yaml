@@ -22,7 +22,9 @@ namespace fuzzyyaml{
     class FuzzyManager
     {
     public:
+        FuzzyManager();
         FuzzyManager(const std::string &configPath);
+        void LoadConfig(const std::string& configPath);
         std::map<std::string, std::map<std::string, InputMembership*>> GetInputMemberships();
         std::map<std::string, std::map<std::string, OutputMembership*>> GetOutputMemberships();
         bool SetCrispInput(const std::string &crispVariable, double crispInput);
@@ -41,6 +43,9 @@ namespace fuzzyyaml{
         void inferenceSystem();
         void defuzzification();
 
+        void deleteCollections();
+
+        std::string _configPath;
         InputMembershipFactory* _pInputMembershipFactory;
         OutputMembershipFactory* _pOutputMembershipFactory;
         RuleBaseFactory* _pRuleBaseFactory;
